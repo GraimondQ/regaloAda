@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def formatta_terrazze():
-    filepath = r'data/terrazze_regalo_ada.xlsx'
+    filepath = r'./terrazze_regalo_ada.xlsx'
     in_path = pathlib.Path(filepath)
     df = pd.read_excel(in_path)
     df.description = df.description.str.replace('. ', '. <br>', regex=False)
@@ -14,7 +14,7 @@ def formatta_terrazze():
 
 
 def formatta_hotspots():
-    filepath = r'data/top_100_hotspots.xlsx'
+    filepath = r'./top_100_hotspots.xlsx'
     in_path = pathlib.Path(filepath)
     df = pd.read_excel(in_path)
     df['description_cleaned'] = '<h4>' + df.description_cleaned + '</h4>'
@@ -23,7 +23,7 @@ def formatta_hotspots():
 
 
 def formatta_ristoranti():
-    filepath = r'data/top_100_restaurants.xlsx'
+    filepath = r'./top_100_restaurants.xlsx'
     in_path = pathlib.Path(filepath)
     df = pd.read_excel(in_path)
     df['description_cleaned'] = '<h4>' + df.description_cleaned + '</h4>'
