@@ -5,81 +5,60 @@ import streamlit as st
 from utils import *
 from streamlit_folium import st_folium, folium_static
 
+st.title("Yet another website as a gift?")
+st.subheader("It's starting to bother me as well ...")
 
+with st.expander("Let's spice things up a bit then"):
 
-st.title('Introducing A:red[. - ] D:red[.]A:red[.]T:red[.]E')
-st.markdown("### :red[A]da's :red[D]inner :red[A]rrangement & :red[T]able :red[E]xperience interactive map")
+    q0 = st.radio("Are you ready?", ['', "No :(", "Yes!"], index=0)
+    if q0 == 'No :(':
+        st.error("Seriously? Gift cancelled then, you can close this page >:(")
+    elif q0 == 'Yes!':
+        st.markdown("""That's the spirit!
+        As I anticipated to you, this time I thought about an **actual present**""")
+        q1 = st.radio("What do you think the present is?",
+                      ['',
+                       "Nothing really, I'm gifting you this interactive journey crafted while ignoring your messages",
+                       "Something I came up with on my own",
+                       "Something you will actually enjoy"]
+                      )
 
+        if q1 == "Nothing really, I'm gifting you this interactive journey crafted while ignoring your messages":
+            st.error("I'm sorry love, I would have loved to have a chat with you last night but this whole experience is not gonna code itself")
+        elif q1 == "Something I came up with on my own":
+            st.error("lol, absolutely impossible")
+        elif q1 == "Something you will actually enjoy":
+            st.success("Well done! Here's a clue for you")
+            st.image("data/yaladef2.jpeg")
 
-with st.expander("Aggiungi un nuovo ristorante da provare!"):
-    with st.form("my_form"):
-       nome = st.text_input('Inserisci il nome')
-       url_thumbnail = st.text_input('Inserisci url thumbnail (è l\'immagine che viene visualizzata quando clicchi il segnalino sulla mappa)')
-       url_video = st.text_input('Inserisci url video')
-       indirizzo = st.text_input('Inserisci l\'indirizzo')
-       country_selected = st.selectbox(label='Seleziona il tipo di cucina', options=list(COUNTRY_NAME_TO_CODE_DICT.keys()))
-       submitted = st.form_submit_button("Submit")
-       if submitted:
-           latitude, longitude = restituisci_coordinate_da_indirizzo_approssimativo(indirizzo)
-           visited = False
-           country_code = COUNTRY_NAME_TO_CODE_DICT[country_selected]
-           icon_image = f"https://purecatamphetamine.github.io/country-flag-icons/3x2/{country_code}.svg"
-           data_to_be_appended = [nome, url_thumbnail, url_video, indirizzo, latitude, longitude, icon_image, visited]
-           df_to_be_appended = pd.DataFrame([data_to_be_appended], columns=pd.read_excel('data/london.xlsx').columns)
-           df_new = pd.concat([pd.read_excel('data/london.xlsx'), df_to_be_appended])
-           df_new.to_excel('data/london.xlsx', index=False)
+            q2 = st.radio("Be honest. You've already figured everything out, haven't you?",
+                          ['',
+                           'Of course',
+                           'Not yet...'])
+            if q2 == "Of course":
+                st.error("Joke's on me for tryharding so much then. "
+                         "Now say what the gift is: if you get it right I'll down whatever I'm drinking, otherwise you'll do it")
+            elif q2 == 'Not yet...':
+                st.success("Then you need another hint!")
+                st.image("data/sigiriya.jpeg")
 
+                q3 = st.radio("To get one last image before facing the final challenge: mirror mirror on the wall, who's the best boyfriend of them all?",
+                              ['', 'Whoever wouldn\'t deploy a deliberately self-glorifying Q&A website on the day of his girlfriend\'s birthday', 'You, Giovanni, my handsome labrador boyfriend'])
+                if q3 == 'Whoever wouldn\'t deploy a deliberately self-glorifying Q&A website on the day of his girlfriend\'s birthday':
+                    st.error("That's so rude of you to be honest")
+                elif q3 == 'You, Giovanni, my handsome labrador boyfriend':
+                    st.success("Aww what a cutie, here's your last bonus pic")
+                    st.image("data/dambulla.jpeg")
 
-df = pd.read_excel('data/london.xlsx')
-
-
-with st.expander('Per indicare un luogo visitato (cambiando il colore del marker da rosso a grigio) inserisci qui il nome'):
-    with st.form('visited_form'):
-        st.write("Hai già visitato un posto? Inserisci qui il nome")
-        nome = st.text_input('Inserisci il nome del posto che hai già visitato')
-        submitted = st.form_submit_button("Submit")
-        if submitted:
-            df.loc[df['nome'].str.contains(nome), 'visited'] = True
-            df.to_excel('data/london.xlsx', index=False)
-
-
-df = pd.read_excel('data/london.xlsx')
-
-m = folium.Map(location=[51.5373595, -0.1582341], zoom_start=12, tiles='Cartodb Positron')
-
-
-for index, row in df.iterrows():
-    name = row['nome']
-    url_thumbnail = row['url_thumbnail']
-    url_video = row['url_video']
-    address = row['indirizzo']
-    latitude, longitude = row['latitude'], row['longitude']
-    icon_image = row['icon_image']
-
-    url_thumbnail_encoded = get_image_base64(url_thumbnail)
-    html = build_html_popup(name, address, url_video, url_thumbnail_encoded)
-    iframe = folium.IFrame(html, width=400, height=350)
-    popup = folium.Popup(iframe, max_width=400)
-    icon = folium.features.CustomIcon(icon_image=icon_image, icon_size=(42, 42))
-
-    if row['visited'] == True:
-        folium.Marker(location=[latitude, longitude], popup=popup,
-                      icon=icon).add_to(m)
-
-    elif row['visited'] == False:
-        folium.Marker(location=[latitude, longitude], popup=popup,
-                      icon=icon).add_to(m)
-
-
-folium.Marker(location=[51.5122375, -0.076242], popup='Casa!',
-                      icon=folium.Icon(color='beige', icon='heart')).add_to(m)
-
-
-st_data = folium_static(m, width=800, height=800)
-
-
-with st.expander('Database dei luoghi da provare'):
-    st.info(f'Ci sono {df.shape[0]} ristoranti in totale nel database!')
-    st.info(f"Finora abbiamo provato {df['visited'].sum()} ristoranti!")
-    st.dataframe(df)
-
+                    q4 = st.radio('Ready for the final challenge?', ['', 'Yes'])
+                    if q4 == 'Yes':
+                        st.write('What country is this?')
+                        st.image('data/srilanka.png', width=400)
+                        answer = st.text_input('')
+                        if answer:
+                            if 'lanka' in answer.lower():
+                                st.success("Let's go babe! Happy birthday, love you <3")
+                                st.balloons()
+                                st.image('data/confirmation.png')
+                            else:
+                                st.error("Nope nope nope. I'm so sure about your geography skills that I'm almost certain no one will ever read this message anyways")
