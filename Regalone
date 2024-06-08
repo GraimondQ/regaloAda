@@ -1,6 +1,5 @@
 import streamlit.components.v1 as components
 import streamlit as st
-from utils import *
 
 st.title("Yet another website as a gift?")
 st.subheader("It's starting to bother me as well ...")
